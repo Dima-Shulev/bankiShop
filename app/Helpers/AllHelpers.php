@@ -115,16 +115,17 @@ class AllHelpers {
 
     /**
      * @param $request
-     * взаимодействие с внешним API и получение данных о изображения в json формате
+     * взаимодействие с внешним API и получение данных о изображения в json формате.
+     * также можно получать данные по условию и получения query параметра (пример js = secret) на таком принципе используются токены
      */
 
     public static function api($request){
         if($_SERVER['REQUEST_METHOD'] === "GET"){
-            if(isset($request['js']) && ($request['js'] === "secret")){
+            //if(isset($request['js']) && ($request['js'] === "secret")){
                 $data = Image::select(['id','name','created_at'])->orderBy('id','ASC')->get();
                 $data = json_encode($data);
                 echo $data;
-            }
+            //}
         }else{
            echo "Ошибка. Не правельный метод !";
            exit;

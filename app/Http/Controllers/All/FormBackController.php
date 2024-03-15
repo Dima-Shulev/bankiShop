@@ -32,7 +32,7 @@ class FormBackController extends Controller
     /**
      * @param ValidateForm $request
      * @return \Illuminate\Http\RedirectResponse
-     * метод сохранение и обработки входных данных данных
+     * метод сохранение и обработки входных данных
      */
 
     public function store(ValidateForm $request){
