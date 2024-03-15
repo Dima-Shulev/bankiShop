@@ -19,10 +19,10 @@ class AllHelpers {
         //допустимые форматы, можно добавить :)
         $checkFormats = ['image/webp','image/gif','image/jpeg','image/bmp','image/png'];
         if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-            return redirect()->route('home')->with('error','error_method');
+            return redirect()->route('all.home')->with('error','error_method');
         }
         if(empty($post['name']) || empty($post['image'])){
-            return redirect()->route('home')->with('error','error_form_empty');
+            return redirect()->route('all.home')->with('error','error_form_empty');
         }
         $trans = [];
         foreach($post['name'] as $itemName){
@@ -39,6 +39,7 @@ class AllHelpers {
                             'path' => $path,
                             'created_at' => date('Y-m-d H:i:s')
                         ];
+                        asset('images/'.$path);
                     }else{
                         return redirect()->route('all.home')->with('error','error_type_image');
                     }
@@ -52,6 +53,7 @@ class AllHelpers {
                             'path' => $path,
                             'created_at' => date('Y-m-d H:i:s')
                         ];
+                        asset('images/'.$path);
                     }else{
                         return redirect()->route('all.home')->with('error','error_type_image');
                     }
@@ -102,10 +104,10 @@ class AllHelpers {
 
     public static function saveImage(string $path)
     {
-        $zip_file = 'images.zip';
+        $zip_file = 'invoices/images.zip';
         $zip = new ZipArchive();
         $zip->open($zip_file, ZipArchive::CREATE | ZipArchive::OVERWRITE);
-        $invoice_file = storage_path("app/public/images/"."$path");
+        $invoice_file = storage_path('app/public/images/'."$path");
         $zip->addFile($invoice_file,"/".$path);
         $zip->close();
         return response()->download($zip_file);
@@ -128,4 +130,33 @@ class AllHelpers {
            exit;
         }
     }
+
+    public static function sortImage($request){
+        if(isset($request['sortImage'])){
+            if($request['sort'] !== "false"){
+                if($request['sort'] === "upTime"){
+                    $allImages = Image::select(['name', 'created_at', 'path'])->orderBy('created_at','ASC')->get();
+                    return view('all.index',compact('allImages'));
+                }else if($request['sort'] === "downTime") {
+                    $allImages = Image::select(['name', 'created_at', 'path'])->orderBy('created_at','DESC')->get();
+                    return view('all.index',compact('allImages'));
+                }else if($request['sort'] === "upName"){
+                    $allImages = Image::select(['name', 'created_at', 'path'])->orderBy('name','ASC')->get();
+                    return view('all.index',compact('allImages'));
+                }else if($request['sort'] === "downName") {
+                    $allImages = Image::select(['name', 'created_at', 'path'])->orderBy('name','DESC')->get();
+                    return view('all.index',compact('allImages'));
+                }else {
+                    $allImages = Image::select(['name', 'created_at', 'path'])->get();
+                    return view('all.index',compact('allImages'));
+                }
+            }else {
+                $allImages = Image::select(['name', 'created_at', 'path'])->get();
+                return view('all.index',compact('allImages'));
+            }
+        }
+        $allImages = Image::select(['name', 'created_at', 'path'])->get();
+        return view('all.index',compact('allImages'));
+    }
+
 }

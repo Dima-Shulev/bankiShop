@@ -16,31 +16,7 @@ class FormBackController extends Controller
      */
 
     public function index(Request $request){
-        if(isset($request['sortImage'])){
-            if($request['sort'] !== "false"){
-                if($request['sort'] === "upTime"){
-                    $allImages = Image::select(['name', 'created_at', 'path'])->orderBy('created_at','ASC')->get();
-                    return view('all.index',compact('allImages'));
-                }else if($request['sort'] === "downTime") {
-                    $allImages = Image::select(['name', 'created_at', 'path'])->orderBy('created_at','DESC')->get();
-                    return view('all.index',compact('allImages'));
-                }else if($request['sort'] === "upName"){
-                    $allImages = Image::select(['name', 'created_at', 'path'])->orderBy('name','ASC')->get();
-                    return view('all.index',compact('allImages'));
-                }else if($request['sort'] === "downName") {
-                    $allImages = Image::select(['name', 'created_at', 'path'])->orderBy('name','DESC')->get();
-                    return view('all.index',compact('allImages'));
-                }else {
-                    $allImages = Image::select(['name', 'created_at', 'path'])->get();
-                    return view('all.index',compact('allImages'));
-                }
-            }else {
-                $allImages = Image::select(['name', 'created_at', 'path'])->get();
-                return view('all.index',compact('allImages'));
-            }
-        }
-        $allImages = Image::select(['name', 'created_at', 'path'])->get();
-        return view('all.index',compact('allImages'));
+        return AllHelpers::sortImage($request);
     }
 
     /**
